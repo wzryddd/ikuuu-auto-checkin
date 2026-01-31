@@ -31,6 +31,16 @@ jobs:
         run: |
           node main.js
 
+- name: Keep repository active
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          # 更新一个时间戳文件，确保每次都有内容变化可提交
+          echo "Last run: $(date)" > keep_alive.txt
+          git add keep_alive.txt
+          git commit -m "chore: keep actions alive [skip ci]" || echo "No changes to commit"
+          git push
+    
       - name: Notify
         if: ${{ always() && env.TELEGRAM_TOKEN && env.TELEGRAM_TO }}
         uses: appleboy/telegram-action@master
